@@ -5,66 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video AXPRO</title>
     <style>
-        /* Pantalla completa real sin bordes */
+        /* Reset total para pantalla completa */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #000; 
+        }
 
         .video-container {
             position: relative;
             width: 100vw;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         video {
             width: 100%;
             height: 100%;
-            /* 'cover' llena la pantalla (puede recortar bordes), 'contain' muestra el video completo */
+            /* 'contain' para ver el video completo sin recortes en el cel */
             object-fit: contain; 
+            z-index: 1;
         }
 
-        /* Botón discreto de sonido en la esquina */
+        /* Botón de sonido mejorado para móviles */
         #mute-btn {
             position: absolute;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
+            z-index: 10; /* Asegura que esté por encima del video */
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #fff;
             color: white;
-            padding: 10px 15px;
-            border-radius: 30px;
+            padding: 12px 18px;
+            border-radius: 50px;
             cursor: pointer;
             font-family: sans-serif;
+            font-weight: bold;
             font-size: 14px;
-            backdrop-filter: blur(5px);
-            transition: background 0.3s;
+            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en cel */
         }
-        #mute-btn:hover { background: rgba(255, 255, 255, 0.4); }
+
+        /* Ajuste para que el botón sea más grande en celulares */
+        @media (max-width: 768px) {
+            #mute-btn {
+                padding: 15px 25px;
+                font-size: 16px;
+                top: 10px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="video-container">
-        <video id="miVideo" autoplay muted loop playsinline>
+        <video id="miVideo" autoplay muted loop playsinline controls>
             <source src="video.mp4" type="video/mp4">
             Tu navegador no soporta el video.
         </video>
 
-        <button id="mute-btn" onclick="toggleMute()">🔇 Activar sonido</button>
+        <button id="mute-btn" onclick="toggleMute()">🔈 ACTIVAR AUDIO</button>
     </div>
 
     <script>
+        const video = document.getElementById('miVideo');
+        const btn = document.getElementById('mute-btn');
+
         function toggleMute() {
-            const video = document.getElementById('miVideo');
-            const btn = document.getElementById('mute-btn');
-            
             if (video.muted) {
                 video.muted = false;
-                btn.innerHTML = "🔊 Desactivar sonido";
+                btn.innerHTML = "🔊 QUITAR AUDIO";
+                btn.style.background = "rgba(255, 165, 0, 0.8)"; // Cambia a naranja al activar
             } else {
                 video.muted = true;
-                btn.innerHTML = "🔇 Activar sonido";
+                btn.innerHTML = "🔈 ACTIVAR AUDIO";
+                btn.style.background = "rgba(0, 0, 0, 0.6)";
             }
         }
+
+        // Si el usuario usa los controles nativos para quitar el mute, actualizamos nuestro botón
+        video.onvolumechange = function() {
+            if (video.muted) {
+                btn.innerHTML = "🔈 ACTIVAR AUDIO";
+            } else {
+                btn.innerHTML = "🔊 QUITAR AUDIO";
+            }
+        };
     </script>
 
 </body>
