@@ -5,38 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video AXPRO</title>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-family: sans-serif; }
-        video { width: 100%; max-width: 900px; display: none; } /* Oculto hasta que cargue */
-        #status { text-align: center; }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        video { width: 100%; max-width: 100%; height: auto; }
     </style>
 </head>
 <body>
 
-    <div id="status">Cargando video...</div>
-    
-    <video id="videoPlayer" controls playsinline muted autoplay></video>
+    <video controls autoplay muted playsinline>
+        <source src="video.mp4" type="video/mp4">
+        Tu navegador no soporta el formato de video.
+    </video>
 
-    <script>
-        const videoUrl = 'https://raw.githubusercontent.com/bytecomtec/Video-AXPRO/main/video_comprimido.mp4';
-        const videoPlayer = document.getElementById('videoPlayer');
-        const status = document.getElementById('status');
-
-        // Forzamos la descarga del archivo como un "Blob" para evitar errores de MIME
-        fetch(videoUrl)
-            .then(response => {
-                if (!response.ok) throw new Error('Error al conectar con GitHub');
-                return response.blob();
-            })
-            .then(blob => {
-                const blobUrl = URL.createObjectURL(blob);
-                videoPlayer.src = blobUrl;
-                videoPlayer.style.display = 'block';
-                status.style.display = 'none';
-            })
-            .catch(error => {
-                status.innerHTML = 'Error: No se pudo cargar el video en este navegador.<br>Intenta recargar la página.';
-                console.error(error);
-            });
-    </script>
 </body>
 </html>
