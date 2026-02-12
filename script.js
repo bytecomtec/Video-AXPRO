@@ -1,5 +1,5 @@
 function ponerPantallaCompleta() {
-  const video = document.getElementById("miVideo");
+  const video = document.getElementById("video_comprimido");
   
   if (video.requestFullscreen) {
     video.requestFullscreen();
