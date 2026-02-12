@@ -2,16 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Video AXPRO</title>
     <style>
-        /* Reset total para pantalla completa */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { 
+        /* Forzamos que nada se salga de la pantalla */
+        html, body { 
             width: 100%; 
             height: 100%; 
+            margin: 0; 
+            padding: 0; 
             overflow: hidden; 
-            background-color: #000; 
+            background-color: #000;
+            position: fixed; /* Evita rebotes en Android/iOS */
         }
 
         .video-container {
@@ -26,44 +28,39 @@
         video {
             width: 100%;
             height: 100%;
-            /* 'contain' para ver el video completo sin recortes en el cel */
-            object-fit: contain; 
-            z-index: 1;
+            object-fit: contain; /* Para que se vea completo en cualquier cel */
+            background: #000;
         }
 
-        /* Botón de sonido mejorado para móviles */
+        /* Botón de audio: Lo ponemos abajo para que no estorbe los controles nativos de Android */
         #mute-btn {
             position: absolute;
-            top: 20px;
+            bottom: 80px; /* Subido para que no choque con la barra de Android */
             right: 20px;
-            z-index: 10; /* Asegura que esté por encima del video */
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid #fff;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 50px;
-            cursor: pointer;
+            z-index: 9999; /* Prioridad máxima */
+            background: orange;
+            color: black;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
             font-family: sans-serif;
             font-weight: bold;
-            font-size: 14px;
-            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en cel */
-        }
-
-        /* Ajuste para que el botón sea más grande en celulares */
-        @media (max-width: 768px) {
-            #mute-btn {
-                padding: 15px 25px;
-                font-size: 16px;
-                top: 10px;
-                right: 10px;
-            }
+            font-size: 16px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            display: block !important; /* Forzamos visibilidad */
         }
     </style>
 </head>
 <body>
 
     <div class="video-container">
-        <video id="miVideo" autoplay muted loop playsinline controls>
+        <video id="miVideo" 
+               autoplay 
+               muted 
+               loop 
+               playsinline 
+               controls 
+               controlsList="nodownload">
             <source src="video.mp4" type="video/mp4">
             Tu navegador no soporta el video.
         </video>
@@ -75,26 +72,25 @@
         const video = document.getElementById('miVideo');
         const btn = document.getElementById('mute-btn');
 
+        // Función para el audio
         function toggleMute() {
             if (video.muted) {
                 video.muted = false;
                 btn.innerHTML = "🔊 QUITAR AUDIO";
-                btn.style.background = "rgba(255, 165, 0, 0.8)"; // Cambia a naranja al activar
+                btn.style.background = "#fff";
             } else {
                 video.muted = true;
                 btn.innerHTML = "🔈 ACTIVAR AUDIO";
-                btn.style.background = "rgba(0, 0, 0, 0.6)";
+                btn.style.background = "orange";
             }
         }
 
-        // Si el usuario usa los controles nativos para quitar el mute, actualizamos nuestro botón
-        video.onvolumechange = function() {
-            if (video.muted) {
-                btn.innerHTML = "🔈 ACTIVAR AUDIO";
-            } else {
-                btn.innerHTML = "🔊 QUITAR AUDIO";
-            }
-        };
+        // HACK PARA ANDROID: Forzar que el video intente ser pantalla completa al cargar
+        window.addEventListener('load', () => {
+            video.play().catch(() => {
+                console.log("El autoplay requiere interacción");
+            });
+        });
     </script>
 
 </body>
