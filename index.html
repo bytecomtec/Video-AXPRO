@@ -1,4 +1,68 @@
-<video controls autoplay muted playsinline style="width:100%; height:auto;">
-    <source src="video.mp4" type="video/mp4">
-    Tu navegador no soporta el video.
-</video>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video AXPRO Fullscreen</title>
+    <style>
+        /* Eliminamos márgenes y scrolls */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #000; 
+        }
+
+        /* El video ocupa todo el fondo */
+        .video-fullscreen {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Cambia a 'contain' si no quieres que se recorte nada */
+            display: block;
+        }
+
+        /* Botón de inicio (Necesario para el Audio) */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            cursor: pointer;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="startVideo()">
+        <div>
+            <h1>🔈 Toca para iniciar</h1>
+            <p>El navegador requiere un clic para activar el sonido</p>
+        </div>
+    </div>
+
+    <video id="miVideo" class="video-fullscreen" playsinline loop>
+        <source src="video.mp4" type="video/mp4">
+        Tu navegador no soporta el video.
+    </video>
+
+    <script>
+        function startVideo() {
+            const video = document.getElementById('miVideo');
+            const overlay = document.getElementById('overlay');
+            
+            video.play(); // Inicia el video
+            overlay.style.display = 'none'; // Desaparece la capa
+        }
+    </script>
+
+</body>
+</html>
